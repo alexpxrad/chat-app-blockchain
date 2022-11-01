@@ -22,6 +22,13 @@ contract ChatApp{
         string msg;
     }
 
+    struct AllUsersStruck{
+        string name; 
+        address accountAddress;
+    }
+
+    AllUsersStruck[] getAllUsers;
+
     mapping(address => user) userList;
     mapping(bytes32 => message[]) allMessages;
 
@@ -36,6 +43,8 @@ contract ChatApp{
         require(bytes(name).length>0, "Username cannot be empty");
 
         userList[msg.sender].name = name;
+
+        getAllUsers.push(AllUsersStruck(name, msg.sender));
     }
 
     //Get username
@@ -105,6 +114,10 @@ contract ChatApp{
         function readMessage(address friend_key) external view returns(message[] memory) {
             bytes32 chatCode = _getChatCode(msg.sender, friend_key);
             return allMessages[chatCode];
+        }
+
+        function getAllAppUser() public view returns(AllUsersStruck[] memory){
+            return getAllUsers;
         }
     }
 
